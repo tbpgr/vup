@@ -1,12 +1,9 @@
 module Vup
   class Up
     getter version : SemanticVersions | Nil = SemanticVersions::PATCH
-    getter major : Int32 = 0
-    getter minor : Int32 = 0
-    getter patch : Int32 = 0
-    getter cr_version : String | Nil
-    getter yml_version : String | Nil
-    getter new_version : String | Nil
+    getter! cr_version : ProjectVersion
+    getter! yml_version : ProjectVersion
+    getter! new_version : ProjectVersion
 
     def initialize(@version = SemanticVersions::PATCH)
     end
@@ -28,8 +25,11 @@ module Vup
     def load_version_cr
       src = File.read(Dir.glob(VERSION_CR_PATH).first)
       src.match(/VERSION\s*=\s*"(\d+)\.(\d+)\.(\d+)"/)
-      @major, @minor, @patch = $1.to_i, $2.to_i, $3.to_i
-      @cr_version = "#{@major}.#{@minor}.#{@patch}"
+      @cr_version = ProjectVersion.new.tap do |e|
+        e.major = $1.to_i
+        e.minor = $2.to_i
+        e.patch = $3.to_i
+      end
     end
 
     def validate_shard_version
@@ -39,8 +39,12 @@ module Vup
 
     def load_shard_yml
       src = File.read(Dir.glob(SHARD_PATH).first)
-      src.match(/version:\s(\d+.\d+\.\d+)/)
-      @yml_version = $1
+      src.match(/version:\s(\d+).(\d+)\.(\d+)/)
+      @yml_version = ProjectVersion.new.tap do |e|
+        e.major = $1.to_i
+        e.minor = $2.to_i
+        e.patch = $3.to_i
+      end
     end
 
     def validate_match_versions
@@ -49,14 +53,7 @@ module Vup
     end
 
     def bumpup_version
-      case version
-      when SemanticVersions::MAJOR
-        return "#{@major + 1}.0.0"
-      when SemanticVersions::MINOR
-        return "#{@major}.#{@minor + 1}.0"
-      when SemanticVersions::PATCH
-        return "#{@major}.#{@minor}.#{@patch + 1}"
-      end
+      @new_version = cr_version.dup.bumpup(version)
     end
 
     def update_files(new_version)
@@ -67,13 +64,13 @@ module Vup
     private def update_version_cr(new_version)
       version_cr = Dir.glob(VERSION_CR_PATH).first
       src = File.read(version_cr)
-      new_src = src.gsub(/\d+.\d+\.\d+/, new_version)
+      new_src = src.gsub(/\d+.\d+\.\d+/, new_version.version)
       File.write(version_cr, new_src)
     end
 
     private def update_shard_yml(new_version)
       src = File.read(SHARD_PATH)
-      new_src = src.gsub(/version: \d+.\d+\.\d+/, "version: #{new_version}")
+      new_src = src.gsub(/version: \d+.\d+\.\d+/, "version: #{new_version.version}")
       File.write(SHARD_PATH, new_src)
     end
   end
