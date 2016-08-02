@@ -33,7 +33,7 @@ module Vup
 
     def validate_single_version
       return if Dir.glob(VERSION_CR_PATH).size == 1
-      raise Exception.new("version.cr が1ファイルのみではありません")
+      raise Exception.new("Invalid count(version.cr : #{Dir.glob(VERSION_CR_PATH).size})")
     end
 
     def load_version_cr
@@ -45,7 +45,7 @@ module Vup
 
     def validate_shard_version
       return if Dir.glob(SHARD_PATH).size == 1
-      raise Exception.new("shard.yml が1ファイルのみではありません")
+      raise Exception.new("Invalid count(shard.yml : #{Dir.glob(SHARD_PATH).size})")
     end
 
     def load_shard_yml
@@ -56,7 +56,7 @@ module Vup
 
     def validate_match_versions
       return if (cr_version == yml_version)
-      raise Exception.new("version.cr の version と shard.yml の version が一致していません")
+      raise Exception.new("version.cr version != shard.yml version")
     end
 
     def bumpup_version

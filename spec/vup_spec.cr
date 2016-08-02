@@ -23,10 +23,10 @@ describe Vup::Up do
       ::Dir.cd("fixture/not_exist") do
         begin
           Vup::Up.new(Vup::Up::SemanticVersions::PATCH).validate_single_version
-          fail("version.cr が0ファイルの場合は例外が発生する")
+          fail("error")
         rescue e : Exception
           e.class.should eq(Exception)
-          e.message.should eq("version.cr が1ファイルのみではありません")
+          e.message.should eq("Invalid count(version.cr : 0)")
         end
       end
     end
@@ -35,10 +35,10 @@ describe Vup::Up do
       ::Dir.cd("fixture/double") do
         begin
           Vup::Up.new(Vup::Up::SemanticVersions::PATCH).validate_single_version
-          fail("version.cr が複数ファイル存在する場合は例外が発生しなければならない")
+          fail("error")
         rescue e : Exception
           e.class.should eq(Exception)
-          e.message.should eq("version.cr が1ファイルのみではありません")
+          e.message.should eq("Invalid count(version.cr : 2)")
         end
       end
     end
@@ -49,7 +49,7 @@ describe Vup::Up do
           Vup::Up.new(Vup::Up::SemanticVersions::PATCH).validate_single_version
           true.should be_true
         rescue e : Exception
-          fail("version.cr が1ファイルの場合は例外が発生しない")
+          fail("error")
         end
       end
     end
@@ -71,10 +71,10 @@ describe Vup::Up do
       ::Dir.cd("fixture/not_exist") do
         begin
           Vup::Up.new(Vup::Up::SemanticVersions::PATCH).validate_shard_version
-          fail("shard.yml が0ファイルの場合は例外が発生する")
+          fail("error")
         rescue e : Exception
           e.class.should eq(Exception)
-          e.message.should eq("shard.yml が1ファイルのみではありません")
+          e.message.should eq("Invalid count(shard.yml : 0)")
         end
       end
     end
@@ -85,7 +85,7 @@ describe Vup::Up do
           Vup::Up.new(Vup::Up::SemanticVersions::PATCH).validate_shard_version
           true.should be_true
         rescue e : Exception
-          fail("shard.yml が1ファイルの場合は例外が発生しない")
+          fail("error")
         end
       end
     end
@@ -107,10 +107,10 @@ describe Vup::Up do
           vup.load_version_cr
           vup.load_shard_yml
           vup.validate_match_versions
-          fail("version.cr の version と shard.yml の version が一致しない場合は例外が発生する")
+          fail("error")
         rescue e : Exception
           e.class.should eq(Exception)
-          e.message.should eq("version.cr の version と shard.yml の version が一致していません")
+          e.message.should eq("version.cr version != shard.yml version")
         end
       end
     end
@@ -124,7 +124,7 @@ describe Vup::Up do
           vup.validate_match_versions
           true.should be_true
         rescue e : Exception
-          fail("version.cr の version と shard.yml の version が一致している場合は例外が発生しない")
+          fail("error")
         end
       end
     end
