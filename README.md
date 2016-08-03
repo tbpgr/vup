@@ -10,6 +10,15 @@ $ brew install vup
 ```
 
 ## Usage
+### show
+```bash
+$ cat shard.yml
+name: hoge
+version: 0.1.2
+$ vup --show
+0.1.2
+```
+
 ### version up (patch)
 ```bash
 $ cat shard.yml
