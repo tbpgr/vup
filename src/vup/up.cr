@@ -24,11 +24,8 @@ module Vup
 
     def load_version_cr
       src = File.read(Dir.glob(VERSION_CR_PATH).first)
-      src.match(/VERSION\s*=\s*"(\d+)\.(\d+)\.(\d+)"/)
-      @cr_version = ProjectVersion.new.tap do |e|
-        e.major = $1.to_i
-        e.minor = $2.to_i
-        e.patch = $3.to_i
+      src.match(/VERSION\s*=\s*"(\d+\.\d+\.\d+)"/) do |m|
+        @cr_version = ProjectVersion.from_string(m[1])
       end
     end
 
@@ -39,11 +36,8 @@ module Vup
 
     def load_shard_yml
       src = File.read(Dir.glob(SHARD_PATH).first)
-      src.match(/version:\s(\d+).(\d+)\.(\d+)/)
-      @yml_version = ProjectVersion.new.tap do |e|
-        e.major = $1.to_i
-        e.minor = $2.to_i
-        e.patch = $3.to_i
+      src.match(/version:\s(\d+.\d+\.\d+)/) do |m|
+        @yml_version = ProjectVersion.from_string(m[0])
       end
     end
 
