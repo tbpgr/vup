@@ -30,5 +30,9 @@ module Vup
         e.patch = @patch
       end
     end
+
+    def ==(other : ProjectVersion)
+      version == other.version
+    end
   end
 end
