@@ -31,4 +31,16 @@ describe Vup::ProjectVersion do
       end
     end
   end
+
+  describe ".from_string" do
+    context "version: 3.1.4" do
+      actual = Vup::ProjectVersion.from_string("3.1.4")
+      expected = Vup::ProjectVersion.new.tap do |e|
+        e.major = 3
+        e.minor = 1
+        e.patch = 4
+      end
+      actual.should eq expected
+    end
+  end
 end
