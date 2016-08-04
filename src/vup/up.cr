@@ -1,3 +1,5 @@
+require "yaml"
+
 module Vup
   class Up
     getter version : SemanticVersions | Nil = SemanticVersions::PATCH
@@ -36,9 +38,7 @@ module Vup
 
     def load_shard_yml
       src = File.read(Dir.glob(SHARD_PATH).first)
-      src.match(/version:\s(\d+.\d+\.\d+)/) do |m|
-        @yml_version = ProjectVersion.from_string(m[0])
-      end
+      @yml_version = ProjectVersion.from_string(YAML.parse(src)["version"].as_s)
     end
 
     def validate_match_versions
@@ -53,6 +53,7 @@ module Vup
     def update_files(new_version)
       update_version_cr(new_version)
       update_shard_yml(new_version)
+      STDOUT.puts(new_version.version)
     end
 
     private def update_version_cr(new_version)

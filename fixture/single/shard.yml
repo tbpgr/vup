@@ -5,3 +5,7 @@ authors:
   - atuthor
 
 license: MIT
+dependencies:
+  cli:
+    github: tbpgr/vup
+    version: 5.3.8
