@@ -8,15 +8,34 @@ module Vup
     getter! new_version : ProjectVersion
 
     def initialize(@version = SemanticVersions::PATCH)
+      @version_cr_path = ""
     end
 
-    def bumpup_files
+    def run(dry_run = false)
+      load_files
+      if dry_run
+        puts new_version.version
+        puts version_cr_path
+        puts SHARD_PATH
+      else
+        bumpup_files
+      end
+    end
+
+    def load_files
       validate_single_version
       load_version_cr
       validate_shard_version
       load_shard_yml
       validate_match_versions
-      update_files(bumpup_version)
+    end
+
+    def bumpup_files
+      update_files
+    end
+
+    def new_version
+      @new_version ||= cr_version.dup.bumpup(version)
     end
 
     def validate_single_version
@@ -46,21 +65,21 @@ module Vup
       raise Exception.new("version.cr version != shard.yml version")
     end
 
-    def bumpup_version
-      @new_version = cr_version.dup.bumpup(version)
-    end
-
-    def update_files(new_version)
+    def update_files
       update_version_cr(new_version)
       update_shard_yml(new_version)
       STDOUT.puts(new_version.version)
     end
 
     private def update_version_cr(new_version)
-      version_cr = Dir.glob(VERSION_CR_PATH).first
-      src = File.read(version_cr)
+      src = File.read(version_cr_path)
       new_src = src.gsub(/\d+.\d+\.\d+/, new_version.version)
-      File.write(version_cr, new_src)
+      File.write(version_cr_path, new_src)
+    end
+
+    private def version_cr_path
+      @version_cr_path = Dir.glob(VERSION_CR_PATH).first if @version_cr_path == ""
+      @version_cr_path
     end
 
     private def update_shard_yml(new_version)

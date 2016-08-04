@@ -4,6 +4,7 @@ require "option_parser"
 begin
   version = Vup::SemanticVersions::PATCH
   show = false
+  dry_run = false
   OptionParser.parse! do |parser|
     parser.banner = "Usage: vup"
     parser.on("-v", "--version", "Show version") { puts Vup::VERSION; exit 0 }
@@ -17,13 +18,14 @@ begin
       version = Vup::SemanticVersions::PATCH
     }
     parser.on("--show", "show current version") { show = true }
+    parser.on("-n", "--dry-run", "show version and files to change without actual change") { dry_run = true }
     parser.on("-h", "--help", "Show this help") { puts parser; exit 0 }
   end
 
   if show
     Vup::Show.new.run
   else
-    Vup::Up.new(version).bumpup_files
+    Vup::Up.new(version).run(dry_run)
   end
   exit 0
 rescue e

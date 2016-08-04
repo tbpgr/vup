@@ -131,8 +131,7 @@ describe Vup::Up do
           vup = k[:input].nil? ? Vup::Up.new : Vup::Up.new(k[:input])
           vup.load_version_cr
           vup.load_shard_yml
-          actual = vup.bumpup_version
-          actual.version.should eq(k[:expected])
+          vup.new_version.version.should eq(k[:expected])
         end
       end
     end
