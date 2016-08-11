@@ -2,6 +2,9 @@
 
 Bumpup version
 
+[![Build Status](https://travis-ci.org/tbpgr/vup.png?branch=master)](https://travis-ci.org/tbpgr/vup)
+[![badge](https://img.shields.io/badge/shards-v0.4.0-brightgreen.svg)](https://github.com/tbpgr/homebrew-vup)
+
 ## Installation
 
 ```bash
