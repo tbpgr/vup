@@ -46,3 +46,19 @@ task :release do
   end
   `ghr #{Task::Constants::VERSION} #{Task::Constants::LATEST_RELEASE_DIR}`
 end
+
+desc "generate badge"
+task :badge do
+  badge_url = "[![shards version](https://img.shields.io/badge/shards-#{Task::Constants::VERSION}-brightgreen.svg)](https://github.com/tbpgr/homebrew-vup)"
+  readme_file = 'README.md'
+  readme = File.read(readme_file)
+  regex = /^\[\!\[shards version\]\(.+\)$/
+  base_badge = readme.match(regex)
+  if base_badge.nil?
+    File.open(readme_file, "w") { |f|f.puts "#{badge_url}\n#{readme}" }
+  elsif (base_badge[0] != badge_url)
+    File.open(readme_file, "w") { |f|f.puts readme.gsub(regex, badge_url) }
+  else
+    puts "Badge already up-to-date"
+  end
+end
