@@ -9,8 +9,8 @@ begin
   OptionParser.parse! do |parser|
     parser.banner = "Usage: vup"
     parser.on("-v", "--version", "Show version") { puts Vup::VERSION; exit 0 }
-    parser.on("-ma", "--major", "major version up") { version = Vup::SemanticVersions::MAJOR }
-    parser.on("-mi", "--minor", "minor version up") { version = Vup::SemanticVersions::MINOR }
+    parser.on("-M", "--major", "major version up") { version = Vup::SemanticVersions::MAJOR }
+    parser.on("-m", "--minor", "minor version up") { version = Vup::SemanticVersions::MINOR }
     parser.on("-p", "--patch", "patch version up") { version = Vup::SemanticVersions::PATCH }
     parser.on("--show", "show current version") { show = true }
     parser.on("-d", "--detail", "show update files") { detail = true }
