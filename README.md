@@ -1,5 +1,6 @@
 [![shards version](https://img.shields.io/badge/shards-v0.4.1-brightgreen.svg)](https://github.com/tbpgr/homebrew-vup)
 [![Build Status](https://travis-ci.org/tbpgr/vup.png?branch=master)](https://travis-ci.org/tbpgr/vup)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
 # vup
 
